@@ -3,21 +3,25 @@
 namespace App\Imports;
 
 use App\User;
-
-use Exception;
+use Illuminate\Validation\ValidationException;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
 use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Validators\Failure;
 use Maatwebsite\Excel\Concerns\Importable;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
 use Maatwebsite\Excel\Concerns\WithValidation;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportUsers implements ToModel, WithHeadingRow, withValidation, WithChunkReading,SkipsOnFailure, ShouldQueue
+class ImportUsers implements
+    ToModel,
+    WithHeadingRow,
+    withValidation,
+    WithChunkReading,
+    SkipsOnError,
+    ShouldQueue
 {
-    use importable, SkipsFailures;
+    use importable,SkipsErrors;
 
     /**
     * @param array $row
@@ -47,16 +51,19 @@ class ImportUsers implements ToModel, WithHeadingRow, withValidation, WithChunkR
     public function rules() : array
     {
         return [
-        '0' => 'required',
-        '1' => 'required',
-        '2' => 'required',
-        '3' => 'required',
+        'first_name' => 'required',
+        'last_name' => 'required',
+        'family_name' => 'required',
+        'uuid' => 'required',
         ];
     }
 
-    public function onFailure(Failure ...$failures)
+    /**
+     * @param \Throwable $e
+     */
+    public function onError(\Throwable $e)
     {
-        throw new Exception('Error in importing');
+        throw ValidationException::withMessages(['error' => 'Error in importing']);
     }
 
 }

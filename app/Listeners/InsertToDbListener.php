@@ -22,7 +22,6 @@ class InsertToDbListener
         try {
             Excel::import(new ImportUsers, $event->file);
         } catch (Exception $e) {
-            dump($failures);
             $failures = $e->failures();
             echo count($failures);
         }
