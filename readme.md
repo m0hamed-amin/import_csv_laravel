@@ -61,6 +61,10 @@ usually in production I use supervisor to monitor and configure this to run by s
 
 after return I sent generic email without sending with sending success or failure numbers - without any testing coverage according to available time
 
+## what i will do next 
+
+I'll apply clean code and solid and enhance the rushing work in this task, I left the dependencies all over the project - I will get rid of it also.
+I will finish the whole task and publish it
 
 
 ## Contributing
